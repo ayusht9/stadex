@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Moon, Sun, Globe, LogIn, LogOut, Shield, Navigation as NavIcon, Home, MessageSquare } from 'lucide-react';
+import { Moon, Sun, Globe, LogIn, LogOut, Shield, Navigation as NavIcon, Home, MessageSquare, Languages } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 export function Navbar() {
@@ -55,6 +55,12 @@ export function Navbar() {
                 <MessageSquare className="h-4 w-4" />
                 <span>Chatbot</span>
               </Link>
+              {user?.role === 'Staff' && (
+                <Link to="/translate" className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${location.pathname === '/translate' ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
+                  <Languages className="h-4 w-4" />
+                  <span>Translator</span>
+                </Link>
+              )}
             </div>
           </div>
 

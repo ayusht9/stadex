@@ -5,6 +5,7 @@ import { Navbar } from './components/layout/Navbar';
 import { Dashboard } from './pages/Dashboard';
 import { Stadiums } from './pages/Stadiums';
 import { Chatbot } from './pages/Chatbot';
+import { Translator } from './pages/Translator';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
               <Route path="/" element={<Dashboard />} />
               <Route path="/stadiums" element={<Stadiums />} />
               <Route path="/chat" element={<Chatbot />} />
+              <Route path="/translate" element={<Translator />} />
             </Routes>
           </main>
         </div>
