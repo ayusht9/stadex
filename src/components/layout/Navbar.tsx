@@ -3,6 +3,25 @@ import { useAuth } from '../../context/AuthContext';
 import { RiMoonLine, RiSunLine, RiGlobalLine, RiLoginBoxLine, RiLogoutBoxLine, RiShieldKeyholeLine, RiNavigationLine, RiHome4Line, RiTranslate2, RiFootballLine, RiQuestionAnswerLine } from 'react-icons/ri';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+const LANGUAGES = [
+  { code: 'en', name: 'English' },
+  { code: 'es', name: 'Español' },
+  { code: 'fr', name: 'Français' },
+  { code: 'de', name: 'Deutsch' },
+  { code: 'pt', name: 'Português' },
+  { code: 'it', name: 'Italiano' },
+  { code: 'ar', name: 'العربية' },
+  { code: 'ru', name: 'Русский' },
+  { code: 'zh', name: '中文' },
+  { code: 'ja', name: '日本語' }
+];
 
 export function Navbar() {
   const { user, logout } = useAuth();
@@ -27,9 +46,8 @@ export function Navbar() {
     }
   };
 
-  const toggleLanguage = () => {
-    const newLang = i18n.language === 'en' ? 'es' : 'en';
-    i18n.changeLanguage(newLang);
+  const changeLanguage = (code: string) => {
+    i18n.changeLanguage(code);
   };
 
   return (
@@ -69,13 +87,28 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <button
-              onClick={toggleLanguage}
-              className="p-2 rounded-sm text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors"
-              title="Change Language"
-            >
-              <RiGlobalLine className="h-5 w-5" />
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="p-2 rounded-sm text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors flex items-center"
+                  title="Change Language"
+                >
+                  <RiGlobalLine className="h-5 w-5" />
+                  <span className="ml-1 text-xs font-medium uppercase">{i18n.language}</span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {LANGUAGES.map((lang) => (
+                  <DropdownMenuItem
+                    key={lang.code}
+                    onClick={() => changeLanguage(lang.code)}
+                    className={i18n.language === lang.code ? "bg-gray-100 dark:bg-gray-800 font-bold" : ""}
+                  >
+                    {lang.name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             <button
               onClick={toggleTheme}
               className="p-2 rounded-sm text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors"
