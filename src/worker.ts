@@ -21,7 +21,7 @@ class PipelineSingleton {
 
 class TranslationSingleton {
   static task = 'translation';
-  static model = 'Xenova/nllb-200-distilled-600M';
+  static model = 'Xenova/m2m100_418M';
   static instance: any = null;
 
   static async getInstance(progress_callback: (info: any) => void) {

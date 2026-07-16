@@ -8,8 +8,8 @@ const TestComponent = () => {
   return (
     <div>
       <div data-testid="user-role">{user ? user.role : 'Guest'}</div>
-      <button onClick={() => login('Fan')} data-testid="login-fan">Login Fan</button>
-      <button onClick={() => login('Staff')} data-testid="login-staff">Login Staff</button>
+      <button onClick={() => login({ id: '1', name: 'Fan', email: 'f@f.com', role: 'Fan' })} data-testid="login-fan">Login Fan</button>
+      <button onClick={() => login({ id: '2', name: 'Staff', email: 's@s.com', role: 'Staff' })} data-testid="login-staff">Login Staff</button>
       <button onClick={logout} data-testid="logout">Logout</button>
     </div>
   );

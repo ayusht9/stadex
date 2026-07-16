@@ -1,31 +1,53 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export type Role = 'Fan' | 'Staff';
 
 export interface User {
   id: string;
   name: string;
+  email: string;
   role: Role;
 }
 
 interface AuthContextType {
   user: User | null;
-  login: (role: Role) => void;
+  login: (user: User) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = window.localStorage?.getItem('fifa26_user');
+        if (saved) {
+          return JSON.parse(saved);
+        }
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  });
 
-  const login = (role: Role) => {
-    // Mock JWT-like login setting user state
-    setUser({
-      id: Math.random().toString(36).substr(2, 9),
-      name: role === 'Staff' ? 'Stadium Staff' : 'Football Fan',
-      role,
-    });
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        if (user) {
+          window.localStorage?.setItem('fifa26_user', JSON.stringify(user));
+        } else {
+          window.localStorage?.removeItem('fifa26_user');
+        }
+      } catch (e) {
+        // ignore in tests
+      }
+    }
+  }, [user]);
+
+  const login = (newUser: User) => {
+    setUser(newUser);
   };
 
   const logout = () => {

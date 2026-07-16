@@ -3,9 +3,12 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/layout/Navbar';
 import { Dashboard } from './pages/Dashboard';
+import { Matches } from './pages/Matches';
 import { Stadiums } from './pages/Stadiums';
-import { Chatbot } from './pages/Chatbot';
 import { Translator } from './pages/Translator';
+import { Help } from './pages/Help';
+import { Login } from './pages/Login';
+import { Register } from './pages/Register';
 
 function App() {
   return (
@@ -16,9 +19,12 @@ function App() {
           <main>
             <Routes>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/matches" element={<Matches />} />
               <Route path="/stadiums" element={<Stadiums />} />
-              <Route path="/chat" element={<Chatbot />} />
+              <Route path="/help" element={<Help />} />
               <Route path="/translate" element={<Translator />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
             </Routes>
           </main>
         </div>
