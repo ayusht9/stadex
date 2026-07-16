@@ -2,12 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Moon, Sun, Globe, LogIn, LogOut, Shield, Navigation as NavIcon, Home, MessageSquare, Languages } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export function Navbar() {
   const { user, login, logout } = useAuth();
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const [lang, setLang] = useState('EN');
+  const { t, i18n } = useTranslation();
   const location = useLocation();
+
+  const supportedLanguages = [
+    { code: 'en', label: 'English' },
+    { code: 'es', label: 'Español' },
+    { code: 'fr', label: 'Français' },
+    { code: 'de', label: 'Deutsch' },
+    { code: 'pt', label: 'Português' },
+    { code: 'ar', label: 'العربية' },
+    { code: 'ru', label: 'Русский' },
+    { code: 'zh', label: '中文' },
+    { code: 'ja', label: '日本語' },
+    { code: 'it', label: 'Italiano' }
+  ];
 
   useEffect(() => {
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -26,8 +40,8 @@ export function Navbar() {
     }
   };
 
-  const toggleLang = () => {
-    setLang(lang === 'EN' ? 'ES' : 'EN');
+  const changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    i18n.changeLanguage(e.target.value);
   };
 
   return (
@@ -45,37 +59,40 @@ export function Navbar() {
             <div className="hidden md:flex space-x-4">
               <Link to="/" className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${location.pathname === '/' ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
                 <Home className="h-4 w-4" />
-                <span>Dashboard</span>
+                <span>{t('Dashboard')}</span>
               </Link>
               <Link to="/stadiums" className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${location.pathname === '/stadiums' ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
                 <NavIcon className="h-4 w-4" />
-                <span>Stadiums</span>
+                <span>{t('Stadiums')}</span>
               </Link>
               <Link to="/chat" className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${location.pathname === '/chat' ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
                 <MessageSquare className="h-4 w-4" />
-                <span>Chatbot</span>
+                <span>{t('Chatbot')}</span>
               </Link>
               {user?.role === 'Staff' && (
                 <Link to="/translate" className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${location.pathname === '/translate' ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
                   <Languages className="h-4 w-4" />
-                  <span>Translator</span>
+                  <span>{t('Translator')}</span>
                 </Link>
               )}
             </div>
           </div>
 
           <div className="flex items-center space-x-4">
-            <button
-              onClick={toggleLang}
-              className="p-2 rounded-md text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-primary"
-              aria-label="Toggle language"
-              title="Change Language"
-            >
-              <div className="flex items-center space-x-1">
-                <Globe className="h-5 w-5" />
-                <span className="text-sm font-medium">{lang}</span>
-              </div>
-            </button>
+            <div className="flex items-center space-x-2 mr-2 relative group">
+              <Globe className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+              <select 
+                value={i18n.language} 
+                onChange={changeLanguage}
+                className="bg-transparent text-sm font-medium text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-0 border-none cursor-pointer p-0 w-24"
+              >
+                {supportedLanguages.map(l => (
+                  <option key={l.code} value={l.code} className="text-black dark:text-black">
+                    {l.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             <button
               onClick={toggleTheme}
@@ -108,14 +125,14 @@ export function Navbar() {
                   className="flex items-center space-x-1 px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <LogIn className="h-4 w-4" />
-                  <span>Fan</span>
+                  <span>{t('Fan')}</span>
                 </button>
                 <button
                   onClick={() => login('Staff')}
                   className="flex items-center space-x-1 px-3 py-1.5 bg-primary text-white rounded-md text-sm font-medium hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                 >
                   <Shield className="h-4 w-4" />
-                  <span>Staff</span>
+                  <span>{t('Staff')}</span>
                 </button>
               </div>
             )}
