@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AuthProvider, useAuth } from './AuthContext';
-import React from 'react';
 
 const TestComponent = () => {
   const { user, login, logout } = useAuth();

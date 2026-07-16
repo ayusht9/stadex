@@ -1,12 +1,26 @@
 const express = require('express');
 const cors = require('cors');
+const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const port = process.env.PORT || 3001;
 
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false
+}));
 app.use(cors());
 app.use(express.json());
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 // In-Memory API Cache
 const apiCache = new Map();
@@ -33,45 +47,81 @@ async function fetchCachedExternalData(endpoint) {
   return data;
 }
 
-// In-Memory Database for Users
-let users = [
-  { id: 1, name: 'Demo Fan', email: 'fan@fifa.com', password: 'password123', role: 'Fan' },
-  { id: 2, name: 'Demo Staff', email: 'staff@fifa.com', password: 'password123', role: 'Staff' }
-];
-let nextUserId = 3;
+// Initialize SQLite database
+const dbPath = path.resolve(__dirname, 'database.sqlite');
+const db = new sqlite3.Database(dbPath, (err) => {
+  if (err) {
+    console.error('Error opening database', err.message);
+  } else {
+    console.log('Connected to the SQLite database.');
+
+    // Create users table and seed it
+    db.run(`CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      email TEXT UNIQUE,
+      password TEXT,
+      role TEXT
+    )`, (err) => {
+      if (err) {
+        console.error('Error creating users table', err.message);
+      } else {
+        // Seed users if none exist
+        db.get('SELECT COUNT(*) as count FROM users', (err, row) => {
+          if (err) return;
+          if (row.count === 0) {
+            const insert = 'INSERT INTO users (name, email, password, role) VALUES (?,?,?,?)';
+            db.run(insert, ['Demo Fan', 'fan@fifa.com', 'password123', 'Fan']);
+            db.run(insert, ['Demo Staff', 'staff@fifa.com', 'password123', 'Staff']);
+            console.log('Seeded database with sample users (fan@fifa.com and staff@fifa.com).');
+          }
+        });
+      }
+    });
+  }
+});
 
 // Login Endpoint
-app.post('/api/login', (req, res) => {
+app.post('/api/login', apiLimiter, (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json({ error: 'Email and password are required' });
   }
 
-  const user = users.find(u => u.email === email && u.password === password);
-  
-  if (!user) {
-    return res.status(401).json({ error: 'Invalid email or password' });
-  }
-  
-  res.json({ user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+  db.get('SELECT id, name, email, role FROM users WHERE email = ? AND password = ?', [email, password], (err, row) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    if (!row) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+    res.json({ user: row });
+  });
 });
 
 // Register Endpoint
-app.post('/api/register', (req, res) => {
+app.post('/api/register', apiLimiter, (req, res) => {
   const { name, email, password, role } = req.body;
   if (!name || !email || !password || !role) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-  if (users.find(u => u.email === email)) {
-    return res.status(409).json({ error: 'Email already in use' });
-  }
-
-  const newUser = { id: nextUserId++, name, email, password, role };
-  users.push(newUser);
-  
-  res.status(201).json({
-    user: { id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role }
+  const insert = 'INSERT INTO users (name, email, password, role) VALUES (?,?,?,?)';
+  db.run(insert, [name, email, password, role], function (err) {
+    if (err) {
+      if (err.message.includes('UNIQUE constraint failed')) {
+        return res.status(409).json({ error: 'Email already in use' });
+      }
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(201).json({
+      user: {
+        id: this.lastID,
+        name,
+        email,
+        role
+      }
+    });
   });
 });
 
@@ -99,20 +149,24 @@ app.post('/api/register', (req, res) => {
 
   // Matches Endpoints
   app.get('/api/matches/live', (req, res) => {
+    res.set('Cache-Control', 'public, max-age=60');
     res.json(MOCK_LIVE_MATCHES);
   });
 
   app.get('/api/matches/history', (req, res) => {
+    res.set('Cache-Control', 'public, max-age=3600');
     res.json(MOCK_HISTORY_MATCHES);
   });
 
   app.get('/api/standings', (req, res) => {
+    res.set('Cache-Control', 'public, max-age=300');
     res.json(MOCK_STANDINGS);
   });
 
   // External API Proxy with Cache
   app.get('/api/worldcup/:endpoint', async (req, res) => {
     try {
+      res.set('Cache-Control', 'public, max-age=300');
       const validEndpoints = ['stadiums', 'games', 'teams', 'groups'];
       if (!validEndpoints.includes(req.params.endpoint)) {
         return res.status(404).json({ error: 'Endpoint not supported' });

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { RiMapPin2Line, RiTeamLine, RiEarthLine, RiLoader4Line } from 'react-icons/ri';
+import { RiMapPin2Line, RiTeamLine, RiEarthLine, RiLoader4Line, RiMapPinLine } from 'react-icons/ri';
 import {
   Card,
   CardContent,
@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { stadiumCoordinates } from '../lib/stadiumCoordinates';
 
 interface Stadium {
   id: string;
@@ -18,6 +19,8 @@ interface Stadium {
   country_en: string;
   capacity: number;
   region: string;
+  description: string;
+  city_name_en: string;
 }
 
 export function Stadiums() {
@@ -89,11 +92,18 @@ export function Stadiums() {
             </CardHeader>
             <CardContent className="pt-4 space-y-4">
               
-              <div className="flex items-center text-gray-700 dark:text-gray-300">
-                <RiEarthLine className="h-5 w-5 mr-3 text-gray-400" />
+              <div className="flex items-start text-gray-700 dark:text-gray-300">
+                <RiEarthLine className="h-5 w-5 mr-3 mt-0.5 text-gray-400" />
                 <div>
                   <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Location</p>
-                  <p className="font-semibold">{stadium.city_en}, {stadium.country_en}</p>
+                  <p className="font-semibold">{stadium.city_name_en}, {stadium.country_en}</p>
+                  
+                  {stadiumCoordinates[stadium.name_en] && (
+                    <div className="mt-1 flex items-center text-xs text-gray-400 dark:text-gray-500">
+                      <RiMapPinLine className="mr-1" />
+                      <span>{stadiumCoordinates[stadium.name_en].lat.toFixed(4)}, {stadiumCoordinates[stadium.name_en].lng.toFixed(4)}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 

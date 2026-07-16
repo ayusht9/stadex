@@ -11,6 +11,7 @@ class PipelineSingleton {
 
   static async getInstance(progress_callback: (info: any) => void) {
     if (this.instance === null) {
+      // @ts-ignore
       this.instance = await pipeline(this.task, this.model, {
         progress_callback,
       });
@@ -26,6 +27,7 @@ class TranslationSingleton {
 
   static async getInstance(progress_callback: (info: any) => void) {
     if (this.instance === null) {
+      // @ts-ignore
       this.instance = await pipeline(this.task, this.model, {
         progress_callback,
       });
@@ -39,12 +41,12 @@ self.addEventListener('message', async (event) => {
 
   if (type === 'qa_load') {
     try {
-      const qaPipeline = await PipelineSingleton.getInstance((progress) => {
+      await PipelineSingleton.getInstance((progress) => {
         self.postMessage({ status: 'progress', type: 'qa', progress });
       });
       self.postMessage({ status: 'ready', type: 'qa' });
-    } catch (e) {
-      self.postMessage({ status: 'error', type: 'qa', error: e.message });
+    } catch (e: unknown) {
+      self.postMessage({ status: 'error', type: 'qa', error: e instanceof Error ? e.message : String(e) });
     }
   }
 
@@ -56,19 +58,19 @@ self.addEventListener('message', async (event) => {
       const prompt = `Context: ${context}\n\nQuestion: ${question}\n\nAnswer:`;
       const result = await qaPipeline(prompt, { max_new_tokens: 100 });
       self.postMessage({ status: 'complete', type: 'qa', result: { answer: result[0].generated_text } });
-    } catch (e: any) {
-      self.postMessage({ status: 'error', type: 'qa', error: e.message });
+    } catch (e: unknown) {
+      self.postMessage({ status: 'error', type: 'qa', error: e instanceof Error ? e.message : String(e) });
     }
   }
 
   if (type === 'translate_load') {
     try {
-      const transPipeline = await TranslationSingleton.getInstance((progress) => {
+      await TranslationSingleton.getInstance((progress) => {
         self.postMessage({ status: 'progress', type: 'translate', progress });
       });
       self.postMessage({ status: 'ready', type: 'translate' });
-    } catch (e) {
-      self.postMessage({ status: 'error', type: 'translate', error: e.message });
+    } catch (e: unknown) {
+      self.postMessage({ status: 'error', type: 'translate', error: e instanceof Error ? e.message : String(e) });
     }
   }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RiFootballLine, RiHistoryLine, RiTrophyLine, RiLoader4Line } from 'react-icons/ri';
 
 interface Match {

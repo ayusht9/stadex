@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { RiTranslate2, RiArrowLeftRightLine, RiVolumeUpLine, RiFileCopyLine, RiLoader4Line, RiShieldKeyholeLine } from 'react-icons/ri';
 import { useAuth } from '../context/AuthContext';
 

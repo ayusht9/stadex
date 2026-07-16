@@ -1,21 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { Stadiums } from './Stadiums';
-import React from 'react';
-import userEvent from '@testing-library/user-event';
-
-// Mock fetch for Open-Meteo
-global.fetch = vi.fn(() =>
-  Promise.resolve({
-    json: () => Promise.resolve({
-      current_weather: {
-        temperature: 25.5,
-        weathercode: 3
-      }
-    })
-  })
-) as unknown as ReturnType<typeof vi.fn>;
-
 describe('Stadiums Page', () => {
   it('renders stadium list and default stadium details', async () => {
     render(<Stadiums />);

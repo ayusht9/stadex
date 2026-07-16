@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, type ReactNode, useEffect } from 'react';
 
 export type Role = 'Fan' | 'Staff';
 
