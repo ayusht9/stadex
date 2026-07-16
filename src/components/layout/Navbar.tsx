@@ -88,14 +88,12 @@ export function Navbar() {
 
           <div className="flex items-center space-x-4">
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className="p-2 rounded-sm text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors flex items-center"
-                  title="Change Language"
-                >
-                  <RiGlobalLine className="h-5 w-5" />
-                  <span className="ml-1 text-xs font-medium uppercase">{i18n.language}</span>
-                </button>
+              <DropdownMenuTrigger
+                className="p-2 rounded-sm text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 transition-colors flex items-center"
+                title="Change Language"
+              >
+                <RiGlobalLine className="h-5 w-5" />
+                <span className="ml-1 text-xs font-medium uppercase">{i18n.language}</span>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 {LANGUAGES.map((lang) => (
