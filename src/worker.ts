@@ -5,8 +5,8 @@ env.allowLocalModels = false;
 env.useBrowserCache = true;
 
 class PipelineSingleton {
-  static task = 'question-answering';
-  static model = 'Xenova/distilbert-base-uncased-distilled-squad';
+  static task = 'text2text-generation';
+  static model = 'Xenova/LaMini-Flan-T5-78M';
   static instance: any = null;
 
   static async getInstance(progress_callback: (info: any) => void) {
@@ -53,9 +53,10 @@ self.addEventListener('message', async (event) => {
     const qaPipeline = await PipelineSingleton.getInstance(() => {});
     
     try {
-      const result = await qaPipeline(question, context);
-      self.postMessage({ status: 'complete', type: 'qa', result });
-    } catch (e) {
+      const prompt = `Context: ${context}\n\nQuestion: ${question}\n\nAnswer:`;
+      const result = await qaPipeline(prompt, { max_new_tokens: 100 });
+      self.postMessage({ status: 'complete', type: 'qa', result: { answer: result[0].generated_text } });
+    } catch (e: any) {
       self.postMessage({ status: 'error', type: 'qa', error: e.message });
     }
   }
@@ -81,7 +82,7 @@ self.addEventListener('message', async (event) => {
         tgt_lang,
       });
       self.postMessage({ status: 'complete', type: 'translate', result });
-    } catch (e) {
+    } catch (e: any) {
       self.postMessage({ status: 'error', type: 'translate', error: e.message });
     }
   }

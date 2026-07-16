@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Languages, ArrowRightLeft, Volume2, Copy, Loader2 } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Languages, ArrowRightLeft, Volume2, Copy, Loader2, ShieldAlert } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export function Translator() {
@@ -207,5 +207,4 @@ export function Translator() {
   );
 }
 
-// Temporary for missing import above (if ShieldAlert wasn't in lucide-react)
-import { ShieldAlert } from 'lucide-react';
+

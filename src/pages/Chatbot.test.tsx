@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Chatbot } from './Chatbot';
-import React from 'react';
 
 // Mock Worker
 class WorkerMock {
@@ -31,7 +30,7 @@ class WorkerMock {
 }
 
 beforeEach(() => {
-  global.Worker = WorkerMock as any;
+  vi.stubGlobal('Worker', WorkerMock);
 });
 
 describe('Chatbot Component', () => {

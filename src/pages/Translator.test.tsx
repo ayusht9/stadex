@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Translator } from './Translator';
-import React from 'react';
 import { AuthProvider } from '../context/AuthContext';
 
 // Mock Worker
@@ -31,7 +30,7 @@ class WorkerMock {
 }
 
 beforeEach(() => {
-  global.Worker = WorkerMock as any;
+  vi.stubGlobal('Worker', WorkerMock);
 });
 
 describe('Translator Component', () => {
