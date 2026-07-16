@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Moon, Sun, Globe, LogIn, LogOut, Shield } from 'lucide-react';
+import { Moon, Sun, Globe, LogIn, LogOut, Shield, Navigation as NavIcon, Home } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
 export function Navbar() {
   const { user, login, logout } = useAuth();
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [lang, setLang] = useState('EN');
+  const location = useLocation();
 
   useEffect(() => {
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -26,18 +28,30 @@ export function Navbar() {
 
   const toggleLang = () => {
     setLang(lang === 'EN' ? 'ES' : 'EN');
-    // We would implement real i18n logic here
   };
 
   return (
     <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center space-x-3">
-            <Shield className="h-8 w-8 text-primary" aria-hidden="true" />
-            <span className="font-bold text-xl tracking-tight dark:text-white">
-              FIFA '26 Assist
-            </span>
+          <div className="flex items-center space-x-8">
+            <div className="flex items-center space-x-3">
+              <Shield className="h-8 w-8 text-primary" aria-hidden="true" />
+              <span className="font-bold text-xl tracking-tight dark:text-white">
+                FIFA '26 Assist
+              </span>
+            </div>
+            
+            <div className="hidden md:flex space-x-4">
+              <Link to="/" className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${location.pathname === '/' ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
+                <Home className="h-4 w-4" />
+                <span>Dashboard</span>
+              </Link>
+              <Link to="/stadiums" className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${location.pathname === '/stadiums' ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
+                <NavIcon className="h-4 w-4" />
+                <span>Stadiums</span>
+              </Link>
+            </div>
           </div>
 
           <div className="flex items-center space-x-4">

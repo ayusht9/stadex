@@ -1,0 +1,52 @@
+[
+  {
+    "id": "metlife",
+    "name": "MetLife Stadium",
+    "city": "New York/New Jersey",
+    "country": "USA",
+    "capacity": 82500,
+    "lat": 40.8128,
+    "lon": -74.0742,
+    "description": "Will host the final match of the FIFA World Cup 2026."
+  },
+  {
+    "id": "azteca",
+    "name": "Estadio Azteca",
+    "city": "Mexico City",
+    "country": "Mexico",
+    "capacity": 83264,
+    "lat": 19.3029,
+    "lon": -99.1505,
+    "description": "Historic venue hosting the opening match."
+  },
+  {
+    "id": "bmo",
+    "name": "BMO Field",
+    "city": "Toronto",
+    "country": "Canada",
+    "capacity": 30000,
+    "lat": 43.6332,
+    "lon": -79.4186,
+    "description": "Canada's national soccer stadium."
+  },
+  {
+    "id": "sofi",
+    "name": "SoFi Stadium",
+    "city": "Los Angeles",
+    "country": "USA",
+    "capacity": 70240,
+    "lat": 33.9534,
+    "lon": -118.3387,
+    "description": "State-of-the-art stadium in Inglewood."
+  },
+  {
+    "id": "att",
+    "name": "AT&T Stadium",
+    "city": "Dallas",
+    "country": "USA",
+    "capacity": 80000,
+    "lat": 32.7473,
+    "lon": -97.0945,
+    "description": "Features one of the largest high definition video screens."
+  }
+]
