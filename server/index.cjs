@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 const app = express();
@@ -34,39 +33,12 @@ async function fetchCachedExternalData(endpoint) {
   return data;
 }
 
-// Initialize SQLite database
-const dbPath = path.resolve(__dirname, 'database.sqlite');
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error('Error opening database', err.message);
-  } else {
-    console.log('Connected to the SQLite database.');
-
-    // Create users table and seed it
-    db.run(`CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
-      email TEXT UNIQUE,
-      password TEXT,
-      role TEXT
-    )`, (err) => {
-      if (err) {
-        console.error('Error creating users table', err.message);
-      } else {
-        // Seed users if none exist
-        db.get('SELECT COUNT(*) as count FROM users', (err, row) => {
-          if (err) return;
-          if (row.count === 0) {
-            const insert = 'INSERT INTO users (name, email, password, role) VALUES (?,?,?,?)';
-            db.run(insert, ['Demo Fan', 'fan@fifa.com', 'password123', 'Fan']);
-            db.run(insert, ['Demo Staff', 'staff@fifa.com', 'password123', 'Staff']);
-            console.log('Seeded database with sample users (fan@fifa.com and staff@fifa.com).');
-          }
-        });
-      }
-    });
-  }
-});
+// In-Memory Database for Users
+let users = [
+  { id: 1, name: 'Demo Fan', email: 'fan@fifa.com', password: 'password123', role: 'Fan' },
+  { id: 2, name: 'Demo Staff', email: 'staff@fifa.com', password: 'password123', role: 'Staff' }
+];
+let nextUserId = 3;
 
 // Login Endpoint
 app.post('/api/login', (req, res) => {
@@ -75,15 +47,13 @@ app.post('/api/login', (req, res) => {
     return res.status(400).json({ error: 'Email and password are required' });
   }
 
-  db.get('SELECT id, name, email, role FROM users WHERE email = ? AND password = ?', [email, password], (err, row) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    if (!row) {
-      return res.status(401).json({ error: 'Invalid email or password' });
-    }
-    res.json({ user: row });
-  });
+  const user = users.find(u => u.email === email && u.password === password);
+  
+  if (!user) {
+    return res.status(401).json({ error: 'Invalid email or password' });
+  }
+  
+  res.json({ user: { id: user.id, name: user.name, email: user.email, role: user.role } });
 });
 
 // Register Endpoint
@@ -93,22 +63,15 @@ app.post('/api/register', (req, res) => {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-  const insert = 'INSERT INTO users (name, email, password, role) VALUES (?,?,?,?)';
-  db.run(insert, [name, email, password, role], function (err) {
-    if (err) {
-      if (err.message.includes('UNIQUE constraint failed')) {
-        return res.status(409).json({ error: 'Email already in use' });
-      }
-      return res.status(500).json({ error: err.message });
-    }
-    res.status(201).json({
-      user: {
-        id: this.lastID,
-        name,
-        email,
-        role
-      }
-    });
+  if (users.find(u => u.email === email)) {
+    return res.status(409).json({ error: 'Email already in use' });
+  }
+
+  const newUser = { id: nextUserId++, name, email, password, role };
+  users.push(newUser);
+  
+  res.status(201).json({
+    user: { id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role }
   });
 });
 
