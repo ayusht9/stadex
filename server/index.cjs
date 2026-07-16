@@ -167,7 +167,7 @@ app.post('/api/register', (req, res) => {
     app.use(express.static(path.join(__dirname, '../dist')));
 
     // Catch-all route to serve index.html for client-side routing
-    app.get('(.*)', (req, res) => {
+    app.use((req, res) => {
       res.sendFile(path.join(__dirname, '../dist/index.html'));
     });
 
