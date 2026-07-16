@@ -18,7 +18,7 @@ export function ResultsWidget() {
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/worldcup/games');
+        const response = await fetch('/api/worldcup/games');
         if (!response.ok) throw new Error('Failed to fetch match results');
         const data = await response.json();
         

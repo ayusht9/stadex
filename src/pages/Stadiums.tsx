@@ -29,7 +29,7 @@ export function Stadiums() {
   useEffect(() => {
     const fetchStadiums = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/worldcup/stadiums');
+        const response = await fetch('/api/worldcup/stadiums');
         if (!response.ok) throw new Error('Failed to load stadiums');
         const data = await response.json();
         setStadiums(data.stadiums || []);

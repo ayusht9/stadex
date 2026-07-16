@@ -36,15 +36,15 @@ export function Matches() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [liveRes, histRes, standRes] = await Promise.all([
-          fetch('http://localhost:3001/api/matches/live'),
-          fetch('http://localhost:3001/api/matches/history'),
-          fetch('http://localhost:3001/api/standings')
+        const [liveRes, historyRes, standingsRes] = await Promise.all([
+          fetch('/api/matches/live'),
+          fetch('/api/matches/history'),
+          fetch('/api/standings')
         ]);
         
         setLiveMatches(await liveRes.json());
-        setHistoryMatches(await histRes.json());
-        setStandings(await standRes.json());
+        setHistoryMatches(await historyRes.json());
+        setStandings(await standingsRes.json());
       } catch (error) {
         console.error("Failed to fetch match data", error);
       } finally {

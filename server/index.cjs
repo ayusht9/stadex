@@ -163,6 +163,14 @@ app.post('/api/register', (req, res) => {
   });
 
   if (require.main === module) {
+    // Serve static files from the React build
+    app.use(express.static(path.join(__dirname, '../dist')));
+
+    // Catch-all route to serve index.html for client-side routing
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, '../dist/index.html'));
+    });
+
     app.listen(port, () => {
       console.log(`API Server running on port ${port}`);
     });
