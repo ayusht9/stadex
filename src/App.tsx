@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { Navbar } from './components/layout/Navbar';
 import { Dashboard } from './pages/Dashboard';
 import { Stadiums } from './pages/Stadiums';
+import { Chatbot } from './pages/Chatbot';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/stadiums" element={<Stadiums />} />
+              <Route path="/chat" element={<Chatbot />} />
             </Routes>
           </main>
         </div>

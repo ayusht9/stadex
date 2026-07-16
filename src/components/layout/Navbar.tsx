@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Moon, Sun, Globe, LogIn, LogOut, Shield, Navigation as NavIcon, Home } from 'lucide-react';
+import { Moon, Sun, Globe, LogIn, LogOut, Shield, Navigation as NavIcon, Home, MessageSquare } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 export function Navbar() {
@@ -50,6 +50,10 @@ export function Navbar() {
               <Link to="/stadiums" className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${location.pathname === '/stadiums' ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
                 <NavIcon className="h-4 w-4" />
                 <span>Stadiums</span>
+              </Link>
+              <Link to="/chat" className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${location.pathname === '/chat' ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}>
+                <MessageSquare className="h-4 w-4" />
+                <span>Chatbot</span>
               </Link>
             </div>
           </div>
