@@ -10,7 +10,7 @@
     "start": "node server/index.cjs",
     "dev": "concurrently \"vite\" \"node server/index.cjs\"",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run"
   },

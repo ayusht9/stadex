@@ -11,17 +11,9 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { stadiumCoordinates } from '../lib/stadiumCoordinates';
 
-interface Stadium {
-  id: string;
-  name_en: string;
-  fifa_name: string;
-  city_en: string;
-  country_en: string;
-  capacity: number;
-  region: string;
-  description: string;
-  city_name_en: string;
-}
+import type { Stadium } from '../types';
+
+import { fetchWithCache } from '../lib/cache';
 
 export function Stadiums() {
   const { t } = useTranslation();
@@ -32,9 +24,7 @@ export function Stadiums() {
   useEffect(() => {
     const fetchStadiums = async () => {
       try {
-        const response = await fetch('/api/worldcup/stadiums');
-        if (!response.ok) throw new Error('Failed to load stadiums');
-        const data = await response.json();
+        const data = await fetchWithCache('/api/worldcup/stadiums');
         setStadiums(data.stadiums || []);
       } catch (err: any) {
         setError(err.message || 'Unable to load stadiums data.');

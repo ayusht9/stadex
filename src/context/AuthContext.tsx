@@ -25,7 +25,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (saved) {
           return JSON.parse(saved);
         }
-      } catch (e) {
+      } catch {
         return null;
       }
     }
@@ -40,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else {
           window.localStorage?.removeItem('fifa26_user');
         }
-      } catch (e) {
+      } catch {
         // ignore in tests
       }
     }

@@ -7,6 +7,7 @@ Stadex is the ultimate application for navigating and experiencing the 2026 Worl
 - **Live & History Match Results**: Real-time integration with `worldcup26.ir` API to fetch game scores, stadium details, and group standings.
 - **Stadiums Explorer**: Browse all 16 official World Cup 2026 venues with detailed capacity and location data.
 - **AI Translator**: An on-device translation tool powered by M2M100 for offline, secure translations in multiple languages (English, Spanish, French, Portuguese, German).
+- **AI Support Chatbot**: An intelligent, responsive chatbot that actively pulls real-time context (like live scores, past matches, and stadium data) to answer your queries dynamically.
 - **Authentication System**: Secure role-based access for Fans and Staff members.
 - **Help & FAQ**: An easily accessible Help center with emergency contact information and answers to frequent questions.
 - **Modern UI**: A responsive, accessible, and fast interface built using React, Vite, Tailwind CSS v4, and Shadcn UI.

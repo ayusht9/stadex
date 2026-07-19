@@ -1,4 +1,5 @@
 import { RiCustomerService2Line, RiPhoneLine, RiMailLine, RiShieldCrossLine, RiHospitalLine } from 'react-icons/ri';
+import { Chatbot } from '@/components/Chatbot';
 import {
   Accordion,
   AccordionContent,
@@ -121,6 +122,7 @@ export function Help() {
         </div>
 
       </div>
+      <Chatbot />
     </div>
   );
 }

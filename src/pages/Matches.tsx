@@ -1,31 +1,9 @@
 import { useEffect, useState } from 'react';
 import { RiFootballLine, RiHistoryLine, RiTrophyLine, RiLoader4Line } from 'react-icons/ri';
 
-interface Match {
-  id: number;
-  home: string;
-  away: string;
-  homeScore: number;
-  awayScore: number;
-  minute?: string;
-  status: string;
-  stadium?: string;
-  date?: string;
-}
+import type { Match, GroupStanding } from '../types';
 
-interface TeamStanding {
-  name: string;
-  played: number;
-  won: number;
-  drawn: number;
-  lost: number;
-  points: number;
-}
-
-interface GroupStanding {
-  group: string;
-  teams: TeamStanding[];
-}
+import { fetchWithCache } from '../lib/cache';
 
 export function Matches() {
   const [liveMatches, setLiveMatches] = useState<Match[]>([]);
@@ -37,14 +15,14 @@ export function Matches() {
     const fetchData = async () => {
       try {
         const [liveRes, historyRes, standingsRes] = await Promise.all([
-          fetch('/api/matches/live'),
-          fetch('/api/matches/history'),
-          fetch('/api/standings')
+          fetchWithCache('/api/matches/live'),
+          fetchWithCache('/api/matches/history'),
+          fetchWithCache('/api/standings')
         ]);
         
-        setLiveMatches(await liveRes.json());
-        setHistoryMatches(await historyRes.json());
-        setStandings(await standingsRes.json());
+        setLiveMatches(liveRes);
+        setHistoryMatches(historyRes);
+        setStandings(standingsRes);
       } catch (error) {
         console.error("Failed to fetch match data", error);
       } finally {

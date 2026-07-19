@@ -32,7 +32,7 @@ export function Register() {
         login(data.user);
         navigate('/');
       }
-    } catch (err) {
+    } catch {
       setError('Network error. Please try again.');
     }
   };

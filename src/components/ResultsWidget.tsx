@@ -27,7 +27,7 @@ export function ResultsWidget() {
           .slice(0, 5); // Take top 5 recent results
           
         setResults(finishedGames);
-      } catch (err) {
+      } catch {
         setError('Unable to load recent results.');
       } finally {
         setLoading(false);
