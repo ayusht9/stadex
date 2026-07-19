@@ -6,7 +6,7 @@ env.useBrowserCache = true;
 
 class PipelineSingleton {
   static task = 'text2text-generation';
-  static model = 'Xenova/LaMini-Flan-T5-78M';
+  static model = 'Xenova/LaMini-Flan-T5-77M';
   static instance: any = null;
 
   static async getInstance(progress_callback: (info: any) => void) {
