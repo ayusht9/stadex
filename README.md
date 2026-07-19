@@ -2,6 +2,8 @@
 
 Stadex is the ultimate application for navigating and experiencing the 2026 World Cup across North America. It provides real-time information for fans and operational tools for stadium staff.
 
+[Link to the App](https://stadex-rcjp.onrender.com)
+
 ## Features
 
 - **Live & History Match Results**: Real-time integration with `worldcup26.ir` API to fetch game scores, stadium details, and group standings.
